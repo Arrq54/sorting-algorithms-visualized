@@ -9,7 +9,7 @@
     height: 500px;
 }
 .element{
-    background-color: #9d4edd;
+    background-color: #c48cf1;
     margin: 1px;
     height: 500px;
     
@@ -19,4 +19,7 @@
 }
 .green{
     background-color: #38b000;
+}
+.red{
+    background-color: #e01e37;
 }

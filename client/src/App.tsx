@@ -11,6 +11,7 @@ function App() {
   const [list, setList] = useState<number[]>([]);
   const [sort, setSort] = useState("bubble");
   const [startSorting, setStart] = useState(false);
+  const [speed, setSpeed] = useState(1);
 
 
   const generateList = ()=>{
@@ -37,16 +38,22 @@ function App() {
           <input type="range" value={count} min={10} max={200} step={1} name="rangeQuantity" id="rangeQuantity" onChange={(e)=>setCount(parseInt(e.target.value))} />
         </div> */}
         <div className='opt'>
+          <label htmlFor="rangeQuantity">Select delay ({speed}ms)</label>
+          <input type="range" value={speed} min={1} max={30} step={1} onChange={(e)=>setSpeed(parseInt(e.target.value))} />
+        </div>
+        <div className='opt'>
          
           {listGenerated ? <div></div> :  <div className='button' onClick={()=>generateList()}>GENERATE LIST</div>}
         </div>
         {listGenerated ? <div className='button small' onClick={()=>{setSort("bubble");setStart(true)}}>BUBBLE SORT</div> : <div/>}
       {listGenerated ? <div className='button small' onClick={()=>{setSort("insertion");setStart(true)}}>INSERTION SORT</div> : <div/>}
       {listGenerated ? <div className='button small' onClick={()=>{setSort("selection");setStart(true)}}>SELECTION SORT</div> : <div/>}
+      {listGenerated ? <div className='button small' onClick={()=>{setSort("count");setStart(true)}}>COUNTING SORT</div> : <div/>}
+      {/* {listGenerated ? <div className='button small' onClick={()=>{setSort("bucket");setStart(true)}}>BUCKET SORT</div> : <div/>} */}
       </div>
       <div className='right'>
         
-        <Visualizator list={list} algorithm={sort} animate={startSorting}/>
+        <Visualizator list={list} algorithm={sort} animate={startSorting} delay={speed}/>
       </div>
       
     </div>

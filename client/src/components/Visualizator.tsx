@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import "../styles/Visualizator.css"
-export default function Visualizator(props: {list: number[], algorithm: string, animate: boolean}) {
+interface Stage {
+  index: number[];
+  list: number[];
+}
+export default function Visualizator(props: {list: number[], algorithm: string, animate: boolean, delay: number}) {
     const [height, setHeight] = useState(500);
     const [width, setWidth] = useState();
     const [animating, setAnimating] = useState(false);
@@ -8,22 +12,24 @@ export default function Visualizator(props: {list: number[], algorithm: string, 
     const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 
-    const [stages, setStages] = useState<number[][]>([])
+    const [stages, setStages] = useState<Stage[]>([])
     const [green, setGreen] = useState<number[]>([])
+    const [red, setRed] = useState<number[]>([])
 
 
-    const addStage = (l: number[])=>{
-        stages.push(l)
+    const addStage = (l: number[], indexes: number[])=>{
+        stages.push({list: l, index: indexes})
     }
 
     const animateStages = async ()=>{
       console.log(stages.length);
       for(let i=0;i<stages.length;i++){
-        setList([...stages[i]]);
-      
-        await sleep(1 );
+        setList([...stages[i].list]);
+        setRed([...stages[i].index])
+        await sleep(props.delay);
       }
       setStages([])
+      setRed([])
       for(let i=0;i<list.length;i++){
         green.push(i)
         setGreen(([...green]))
@@ -42,7 +48,7 @@ export default function Visualizator(props: {list: number[], algorithm: string, 
             let temp = l[j];
             l[j] = l[j + 1];
             l[j + 1] = temp;
-            addStage([...l]);
+            addStage([...l],[j,j+1]);
           }
         }
       }
@@ -58,10 +64,10 @@ export default function Visualizator(props: {list: number[], algorithm: string, 
           while ((j > -1) && (current < l[j])) {
               l[j+1] = l[j];
               j--;
-              addStage([...l]);
+              addStage([...l],[j+1,j]);
           }
           l[j+1] = current;
-          addStage([...l]);
+          addStage([...l],[i,j+1]);
       }
       animateStages();
     }
@@ -82,13 +88,83 @@ export default function Visualizator(props: {list: number[], algorithm: string, 
               let tmp = l[i]; 
               l[i] = l[min];
               l[min] = tmp;   
-              addStage([...l]);
+              addStage([...l],[i,min]);
           }
-          addStage([...l]);
+          addStage([...l],[]);
       }
       animateStages();
     
     }
+
+
+
+    const countingSort = () => {
+      let inputArr = [...list]
+      let n = inputArr.length
+      let k = Math.max(...inputArr);
+      let t;
+      const temp = new Array(k + 1).fill(0);
+      for(let i = 0; i < n; i++){
+        t = inputArr[i];
+        
+        temp[t]++;
+        addStage([...inputArr],[i,t]);
+      }
+      for(let i = 1; i <= k; i++){
+        temp[i] = temp[i] + temp[i - 1];  
+      }
+      const outputArr = new Array(n).fill(0);
+      
+      for(let i = n - 1; i >= 0; i--) {
+        t = inputArr[i];
+        outputArr[temp[t] - 1] = t;  
+        addStage([...outputArr],[i,t]);
+        temp[t] = temp[t] - 1;		
+       }
+      animateStages()
+    }
+
+
+
+
+    const bucketSort = ()=>
+    {
+      let arr = [...list]
+      let n = arr.length
+        if (n <= 0)
+                return;
+      
+            // 1) Create n empty buckets      
+            let buckets = new Array(n);
+      
+            for (let i = 0; i < n; i++)
+            {
+                buckets[i] = [];
+            }
+      
+            // 2) Put array elements in different buckets
+            for (let i = 0; i < n; i++) {
+                let idx = arr[i] * n;
+                let flr = Math.floor(idx);
+                buckets[flr].push(arr[i]);
+            }
+      
+            // 3) Sort individual buckets
+            for (let i = 0; i < n; i++) {
+                buckets[i].sort(function(a:number,b:number){return a-b;});
+            }
+      
+            // 4) Concatenate all buckets into arr[]
+            let index = 0;
+            for (let i = 0; i < n; i++) {
+                for (let j = 0; j < buckets[i].length; j++) {
+                    arr[index++] = buckets[i][j];
+                    addStage([...arr],[i,j]);
+                }
+            }
+            animateStages()
+    }
+
 
     const startSorting = ()=>{
       switch(props.algorithm){
@@ -101,9 +177,17 @@ export default function Visualizator(props: {list: number[], algorithm: string, 
         case"selection":
           selectionSort()
           break;
+        case"count":
+          countingSort()
+          break;
+        case"bucket":
+          bucketSort()
+          break;
         default: break;
       }
     }
+
+    
 
     if(props.animate && animating==false){
       startSorting()
@@ -113,7 +197,7 @@ export default function Visualizator(props: {list: number[], algorithm: string, 
     <div className='visualizator' >
       <div className='items'>
         {list.map((element,index)=>{
-              return green.includes(index)?<div key={index} className='element green' style={{height: (element/list.length)*height, width: 8} }></div>:<div key={index} className='element' style={{height: (element/list.length)*height, width: 8} }></div>
+              return green.includes(index)?<div key={index} className='element green' style={{height: (element/list.length)*height, width: 8} }></div>:red.includes(index)?<div key={index} className='element red' style={{height: (element/list.length)*height, width: 8} }></div>:<div key={index} className='element' style={{height: (element/list.length)*height, width: 8} }></div>
              
           })}
       </div>
