@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Open Sans', sans-serif;
+}
+.App {
+  text-align: center;
+  background-color: #f4f3ee;
+  height: 100vh;
+  display: flex;
+}
+.left{
+  width: 20%;
+  background-color: #9d4edd;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.right{
+  width: 80%;
+  padding: 30px;
+}
+.opt{
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  align-items: center;
+}
+label{
+  color: white;
+  font-size: 110%;
+  margin-bottom: 10px;
+}
+.showCount{
+  color: white;
+  font-size: 50px;
+}
+input[type="range"]{
+  width: 95%;
+}
+.button{
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 20px;
+  width: 60%;
+  cursor: pointer;
+  color: #ffd919;
+  font-weight: 600;
+  transition: 0.4s all ease-in-out;
+  background-color: #9d4edd;
+  border: 2px solid #ffd919;
+}
+.button:hover{
+  transform: translateY(-5px);
+  transition: 0.4s all ease-in-out;
+  background-color: #ffd919;
+  border: 2px solid #9d4edd;
+  color: #9d4edd;
+}
+.disabled{
+  background-color: rgb(186, 186, 186);
+  border: none;
+  color: gray;
+
+}
+.disabled:hover{
+  transform: translateY(0);
+  transition: 0.4s all ease-in-out;
+  background-color: rgb(186, 186, 186);
+  border: none;
+  color: gray;
+}

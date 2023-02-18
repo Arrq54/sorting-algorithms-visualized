@@ -1,0 +1,22 @@
+.visualizator{
+    display: flex;
+    height: 550px;
+    flex-direction: column;
+}
+.items{
+    display: flex;
+    align-items: flex-end;
+    height: 500px;
+}
+.element{
+    background-color: #9d4edd;
+    margin: 1px;
+    height: 500px;
+    
+}
+.small{
+    width: 120px;
+}
+.green{
+    background-color: #38b000;
+}
