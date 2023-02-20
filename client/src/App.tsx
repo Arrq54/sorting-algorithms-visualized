@@ -1,8 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
 import logo from './logo.svg';
-import './App.css';
+import './styles/App.css';
 import Visualizator from './components/Visualizator';
+import MenuAnimation from './components/MenuAnimation';
 
 function App() {
   const [count, setCount] = useState(105);
@@ -12,6 +13,8 @@ function App() {
   const [sort, setSort] = useState("bubble");
   const [startSorting, setStart] = useState(false);
   const [speed, setSpeed] = useState(1);
+
+
 
 
   const generateList = ()=>{
@@ -24,6 +27,7 @@ function App() {
     });
     setList([...list])
     setFlag(true);
+    // setStart(true);
   }
 
 
@@ -32,29 +36,39 @@ function App() {
 
   return (
     <div className="App">
-      <div className='left'>
-        {/* <div className='opt'>
-          <label htmlFor="rangeQuantity">List will consist of <h2 className='showCount'>{count}</h2> elements</label>
-          <input type="range" value={count} min={10} max={200} step={1} name="rangeQuantity" id="rangeQuantity" onChange={(e)=>setCount(parseInt(e.target.value))} />
-        </div> */}
+      <h1>SORTING VISUALIZATOR</h1>
+      {!listGenerated?<MenuAnimation/>:<div/>}
+      
+      <div className='menu'>
+              <div className='left' style={{width: listGenerated?"0%":"100%", display: listGenerated?"none":"flex"}}>
+
         <div className='opt'>
-          <label htmlFor="rangeQuantity">Select delay ({speed}ms)</label>
-          <input type="range" value={speed} min={1} max={30} step={1} onChange={(e)=>setSpeed(parseInt(e.target.value))} />
+            <h2>Select sorting algorithm</h2>
+            <select name="" id="" onChange={(e)=>setSort(e.target.value)}>
+              <option value="bubble" >BUBBLE SORT</option>
+              <option value="insertion" >INSERTION SORT</option>
+              <option value="selection" >SELECTION SORT</option>
+              <option value="count" >COUNTING SORT</option>
+          </select>
         </div>
         <div className='opt'>
-         
-          {listGenerated ? <div></div> :  <div className='button' onClick={()=>generateList()}>GENERATE LIST</div>}
+          {listGenerated ? <div></div> :  <div className='button start' onClick={()=>generateList()}>Start visualization</div>}
         </div>
-        {listGenerated ? <div className='button small' onClick={()=>{setSort("bubble");setStart(true)}}>BUBBLE SORT</div> : <div/>}
-      {listGenerated ? <div className='button small' onClick={()=>{setSort("insertion");setStart(true)}}>INSERTION SORT</div> : <div/>}
-      {listGenerated ? <div className='button small' onClick={()=>{setSort("selection");setStart(true)}}>SELECTION SORT</div> : <div/>}
-      {listGenerated ? <div className='button small' onClick={()=>{setSort("count");setStart(true)}}>COUNTING SORT</div> : <div/>}
-      {/* {listGenerated ? <div className='button small' onClick={()=>{setSort("bucket");setStart(true)}}>BUCKET SORT</div> : <div/>} */}
-      </div>
-      <div className='right'>
-        
+        {/* {listGenerated ? <div className='button small' onClick={()=>{setSort("bubble");setStart(true)}}>BUBBLE SORT</div> : <div/>}
+        {listGenerated ? <div className='button small' onClick={()=>{setSort("insertion");setStart(true)}}>INSERTION SORT</div> : <div/>}
+        {listGenerated ? <div className='button small' onClick={()=>{setSort("selection");setStart(true)}}>SELECTION SORT</div> : <div/>}
+        {listGenerated ? <div className='button small' onClick={()=>{setSort("count");setStart(true)}}>COUNTING SORT</div> : <div/>} */}
+        {/* {listGenerated ? <div className='button small' onClick={()=>{setSort("bucket");setStart(true)}}>BUCKET SORT</div> : <div/>} */}
+        </div>
+        {listGenerated?<div className='wholeRight'><div className='right'>
+
         <Visualizator list={list} algorithm={sort} animate={startSorting} delay={speed}/>
+       
+
+        </div> {!startSorting?<div className='start p-abs' onClick={()=>setStart(true)}>Start</div>:<div/>}</div>:<div/>}
       </div>
+      
+      
       
     </div>
   );
